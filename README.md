@@ -4,12 +4,13 @@ ASFS
 
 Motivation
 =======
-The hyperspectral image has the remarkable characteristics of high similarity between adjacent bands. When reconstructing the current band, if the adjacent bands are employed effectively, the complementary information would be beneficial to recover more missing details. Besides,  in a certain spectral range, the sharpness of the edge in the image varies with the bands. It indicates the information of different bands complements each other.
+**The hyperspectral image has the remarkable characteristics of high similarity between adjacent bands. When reconstructing the current band, if the adjacent bands are employed effectively, the complementary information would be beneficial to recover more missing details. Besides,  in a certain spectral range, the sharpness of the edge in the image varies with the bands. It indicates the information of different bands complements each other.**
 
 Flowchat
 =====
 ![Image text](https://github.com/qianngli/Images/blob/master/asfs.tiff)
-The network mainly contains feature extraction (FE) and image reconstruction (IR). Inspired by the high similarity among adjacent bands, neighboring band partition is proposed to divide the adjacent bands into several groups. Through the current  band,  the  adjacent bands is guided to enhance the exploration ability. To explore more complementary information, an alternative fusion mechanism, i.e., intra-group fusion and inter-group fusion, is designed, which helps to recover the missing details in the current band.
+
+**The network mainly contains feature extraction (FE) and image reconstruction (IR). Inspired by the high similarity among adjacent bands, neighboring band partition is proposed to divide the adjacent bands into several groups. Through the current  band,  the  adjacent bands is guided to enhance the exploration ability. To explore more complementary information, an alternative fusion mechanism, i.e., intra-group fusion and inter-group fusion, is designed, which helps to recover the missing details in the current band.**
 
 Dataset
 ------
