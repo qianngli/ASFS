@@ -8,7 +8,7 @@ Motivation
 
 Flowchat
 =====
-![Image text](https://github.com/qianngli/Images/blob/master/asps_pu.png)
+![Image text](https://github.com/qianngli/Images/blob/master/asfs.jpg)
 
 **The network mainly contains feature extraction (FE) and image reconstruction (IR). Inspired by the high similarity among adjacent bands, neighboring band partition is proposed to divide the adjacent bands into several groups. Through the current  band,  the  adjacent bands is guided to enhance the exploration ability. To explore more complementary information, an alternative fusion mechanism, i.e., intra-group fusion and inter-group fusion, is designed, which helps to recover the missing details in the current band.**
 
