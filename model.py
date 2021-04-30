@@ -164,7 +164,7 @@ class pre_Net(nn.Module):
         group_one =  self.head_group_one(x) 
         group_two =  self.head_group_two(torch.cat([neigbor_l[:,1,:,:].unsqueeze(1), x, neigbor_l[:,0,:,:].unsqueeze(1)], 1))                       
         group_three =  self.head_group_three(torch.cat([neigbor_l[:,0,:,:].unsqueeze(1), x, neigbor_l[:,1,:,:].unsqueeze(1)], 1)) 
-        	
+        skip =	group_one
         res = []
         res.append(group_one)
         res.append(group_two)
@@ -189,7 +189,7 @@ class pre_Net(nn.Module):
         out = torch.cat([group_one, group_two, group_three], 1)
         out = self.last_reduceD(out)
         out = self.conv(out)     
-        out = out + group_one       
+        out = out + skip       
            
         if band_index == 0:
         
