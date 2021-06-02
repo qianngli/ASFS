@@ -63,7 +63,6 @@ def main():
 
 
         first_state = None
-        second_state = None  
               	
         if opt.cuda:
             input = input.cuda()
@@ -113,7 +112,7 @@ def main():
             single_bicu = bicu[:,i,:,:]  
             left =  Variable(torch.cat(neigbor_l, 1)) 
             right =  Variable(torch.cat(neigbor_r, 1)) 		                 	                                    	
-            output, first_state, second_state = model(i, x, single_bicu, left, right, first_state, second_state)                          
+            output, first_state = model(i, x, single_bicu, left, right, first_state)                          
                     
             SR[i,:,:] = output.cpu().data[0].numpy() 
       
