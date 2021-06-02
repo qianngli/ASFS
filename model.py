@@ -106,12 +106,9 @@ class pre_Net(nn.Module):
         n_blocks = args.n_blocks
 
         self.n_module = args.n_module
-        
-                   
+                  
         kernel_size = 3
         act = nn.ReLU(inplace=True)
-        self.gamma_F = nn.Parameter(torch.ones(self.n_module,3))
-        self.gamma_S = nn.Parameter(torch.ones(self.n_module,3))
         self.gamma_rnn = nn.Parameter(torch.ones(2))        
                
         wn = lambda x: torch.nn.utils.weight_norm(x)                
@@ -139,12 +136,6 @@ class pre_Net(nn.Module):
         ]
         self.tail = nn.Sequential(*tail)     
         
-       
-        two_reduceD = [wn(conv2d(n_feats*2, n_feats, kernel_size=1))]       
-        self.two_reduceD = nn.Sequential(*two_reduceD)  
-
-        three_reduceD = [wn(conv2d(n_feats*3, n_feats, kernel_size=1))]       
-        self.three_reduceD = nn.Sequential(*three_reduceD) 
         
         rnn_reduceD = [wn(conv2d(n_feats*2, n_feats, kernel_size=1))]       
         self.rnn_reduceD = nn.Sequential(*rnn_reduceD)               
@@ -154,16 +145,15 @@ class pre_Net(nn.Module):
         
         last_reduceD = [wn(conv2d(n_feats*3, n_feats, kernel_size=1))]       
         self.last_reduceD = nn.Sequential(*last_reduceD)  
-        
-        self.gamma_inter = nn.Parameter(torch.ones(2,3))        
                
-    def forward(self, band_index, x, bicu, neigbor_l, neigbor_r, first_state = None, second_state = None):
+               
+    def forward(self, band_index, x, bicu, neigbor_l, neigbor_r, first_state = None):
 
         ## initial feature extraction
         x = x.unsqueeze(1)
-        group_one =  self.head_group_one(x) 
-        group_two =  self.head_group_two(torch.cat([neigbor_l[:,1,:,:].unsqueeze(1), x, neigbor_l[:,0,:,:].unsqueeze(1)], 1))                       
-        group_three =  self.head_group_three(torch.cat([neigbor_l[:,0,:,:].unsqueeze(1), x, neigbor_l[:,1,:,:].unsqueeze(1)], 1)) 
+        group_one =  self.head_group_one(x)
+        group_two =  self.head_group_two(torch.cat([neigbor_l[:,1,:,:].unsqueeze(1), x, neigbor_r[:,0,:,:].unsqueeze(1)], 1))                       
+        group_three =  self.head_group_three(torch.cat([neigbor_l[:,0,:,:].unsqueeze(1), x, neigbor_r[:,1,:,:].unsqueeze(1)], 1)) 
         skip =	group_one
         res = []
         res.append(group_one)
@@ -191,21 +181,16 @@ class pre_Net(nn.Module):
         out = self.conv(out)     
         out = out + skip       
            
-        if band_index == 0:
-        
-           first_state = out
-           second_state = out
-           
-        else:           
+        if band_index != 0:    
            out = torch.cat([self.gamma_rnn[0]*out, self.gamma_rnn[1]*first_state], 1)
            out = self.two_reduceD(out)
-           first_state = out               
-           
-        out = out + group_one
+          
+        first_state = out                         
+        out = out + skip
         
         ## image reconstruction 
         out = self.tail(out)
         out = out.squeeze(1)
         out = torch.add(out.squeeze(1), bicu.squeeze(1))    
-        return out, first_state, second_state
+        return out, first_state
         
