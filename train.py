@@ -81,7 +81,6 @@ def train(train_loader, optimizer, model, criterion, epoch):
         input, bicu, label = Variable(batch[0]),  Variable(batch[1]), Variable(batch[2], requires_grad=False)
         
         first_state = None
-        second_state = None
 
         if opt.cuda:
             input = input.cuda()
@@ -137,15 +136,11 @@ def train(train_loader, optimizer, model, criterion, epoch):
             left =  Variable(torch.cat(neigbor_l, 1)) 
             right =  Variable(torch.cat(neigbor_r, 1)) 	
                                    	
-            SR, first_state, second_state = model(i, x, single_bicu, left, right, first_state, second_state)     
+            SR, first_state = model(i, x, single_bicu, left, right, first_state)     
        
             first_state.detach_()
             first_state = first_state.detach()
-            first_state = Variable(first_state.data, requires_grad=False)
-            second_state.detach_()            
-            second_state = second_state.detach()
-            second_state = Variable(second_state.data, requires_grad=False)
-                          
+            first_state = Variable(first_state.data, requires_grad=False)                 
             loss = criterion(SR, single_label)
             
             optimizer.zero_grad()
@@ -170,8 +165,7 @@ def val(val_loader, model, epoch):
         input, bicu, HR = Variable(batch[0], volatile=True),  Variable(batch[1], volatile=True), Variable(batch[2])
         SR = np.zeros((HR.shape[1], HR.shape[2], HR.shape[3])).astype(np.float32) 
 
-        first_state = None
-        second_state = None  
+        first_state = None  
               	
         if opt.cuda:
             input = input.cuda()
@@ -223,7 +217,7 @@ def val(val_loader, model, epoch):
             right =  Variable(torch.cat(neigbor_r, 1)) 		 
                 	            
                         	
-            output, first_state, second_state = model(i, x, single_bicu, left, right, first_state, second_state)     
+            output, first_state = model(i, x, single_bicu, left, right, first_state)     
                      
                     
             SR[i,:,:] = output.cpu().data[0].numpy() 
