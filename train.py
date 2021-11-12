@@ -9,7 +9,7 @@ from torch.utils.data import DataLoader
 import numpy as np
 
 from option import  opt
-from model import Net
+from model import pre_Net
 from data_utils import TrainsetFromFolder, ValsetFromFolder
 from eval import PSNR, SSIM, SAM
 from torch.optim.lr_scheduler import MultiStepLR
