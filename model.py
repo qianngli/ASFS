@@ -183,7 +183,7 @@ class pre_Net(nn.Module):
            
         if band_index != 0:    
            out = torch.cat([self.gamma_rnn[0]*out, self.gamma_rnn[1]*first_state], 1)
-           out = self.two_reduceD(out)
+           out = self.rnn_reduceD(out)
           
         first_state = out                         
         out = out + skip
